@@ -1,0 +1,309 @@
+#Get Estimates of Solar Data Production
+#Loading Data and Calculating Distribution Parameters
+
+setwd("~/Documents/Math 301/Easton Solar Panels Project")
+
+#Initialize data arrays for each month
+productionmean = 1:12
+productionsd = 1:12
+consumptionmean = 1:12
+consumptionsd = 1:12
+#January Production
+solarJan = read.csv("JanProduction.csv", header=T)
+productionmean[1] = mean(solarJan$System.Production..Wh.)
+productionsd[1] = sd(solarJan$System.Production..Wh.)
+#February
+solarJan = read.csv("FebProduction.csv", header=T)
+productionmean[2] = mean(solarJan$System.Production..Wh.)
+productionsd[2] = sd(solarJan$System.Production..Wh.)
+#March
+solarMar = read.csv("MarProduction.csv", header=T)
+productionmean[3] = mean(solarMar$System.Production..Wh.)
+productionsd[3] = sd(solarMar$System.Production..Wh.)
+#April
+solarApr = read.csv("AprProduction.csv", header=T)
+productionmean[4] = mean(solarApr$System.Production..Wh.)
+productionsd[4] = sd(solarApr$System.Production..Wh.)
+#May
+solarMay = read.csv("MayProduction.csv", header=T)
+productionmean[5] = mean(solarMay$System.Production..Wh.)
+productionsd[5] = sd(solarMay$System.Production..Wh.)
+#June
+solarJun = read.csv("JunProduction.csv", header=T)
+productionmean[6] = mean(solarJun$System.Production..Wh.)
+productionsd[6] = sd(solarJun$System.Production..Wh.)
+#July
+solarJul = read.csv("JulProduction.csv", header=T)
+productionmean[7] = mean(solarJul$System.Production..Wh.)
+productionsd[7] = sd(solarJul$System.Production..Wh.)
+#August
+solarAug = read.csv("AugProduction.csv", header=T)
+productionmean[8] = mean(solarAug$System.Production..Wh.)
+productionsd[8] = sd(solarAug$System.Production..Wh.)
+#September
+solarSep = read.csv("SepProduction.csv", header=T)
+productionmean[9] = mean(solarSep$System.Production..Wh.)
+productionsd[9] = sd(solarSep$System.Production..Wh.)
+#October
+solarOct = read.csv("OctProduction.csv", header=T)
+productionmean[10] = mean(solarOct$System.Production..Wh.)
+productionsd[10] = sd(solarOct$System.Production..Wh.)
+#November
+solarNov = read.csv("NovProduction.csv", header=T)
+productionmean[11] = mean(solarNov$System.Production..Wh.)
+productionsd[11] = sd(solarNov$System.Production..Wh.)
+#December
+solarDec = read.csv("DecProduction.csv", header=T)
+productionmean[12] = mean(solarDec$System.Production..Wh.)
+productionsd[12] = sd(solarDec$System.Production..Wh.)
+
+#Consumption
+#January Consumption
+Jan2018 = read.csv("Jan2018.csv", header=T)
+attach(Jan2018)
+consumptionmean[1]=mean(Consumption..Wh.)
+consumptionsd[1]=sd(Consumption..Wh.)
+#February Consumption
+Feb2018 = read.csv("Feb2018.csv", header=T)
+attach(Feb2018)
+consumptionmean[2]=mean(Consumption..Wh.)
+consumptionsd[2]=sd(Consumption..Wh.)
+#March Consumption
+March2018 = read.csv("March2018.csv", header=T)
+attach(March2018)
+consumptionmean[3]=mean(Consumption..Wh.)
+consumptionsd[3]=sd(Consumption..Wh.)
+#April Consumption
+Apr2018 = read.csv("Apr2018.csv", header=T)
+attach(Apr2018)
+consumptionmean[4]=mean(Consumption..Wh.)
+consumptionsd[4]=sd(Consumption..Wh.)
+#May Consumption
+May2018 = read.csv("May2018.csv", header=T)
+attach(May2018)
+consumptionmean[5]=mean(Consumption..Wh.)
+consumptionsd[5]=sd(Consumption..Wh.)
+#June Consumption
+Jun2018 = read.csv("Jun2018.csv", header=T)
+attach(Jun2018)
+consumptionmean[6]=mean(Consumption..Wh.)
+consumptionsd[6]=sd(Consumption..Wh.)
+#July Consumption
+July2018 = read.csv("July2018.csv", header=T)
+attach(July2018)
+consumptionmean[7]=mean(Consumption..Wh.)
+consumptionsd[7]=sd(Consumption..Wh.)
+#August Consumption
+Aug2018 = read.csv("Aug2018.csv", header=T)
+attach(Aug2018)
+consumptionmean[8]=mean(Consumption..Wh.)
+consumptionsd[8]=sd(Consumption..Wh.)
+#September Consumption
+September2018 = read.csv("September2018.csv", header=T)
+attach(September2018)
+consumptionmean[9]=mean(Consumption..Wh.)
+consumptionsd[9]=sd(Consumption..Wh.)
+#October Consumption
+October2018 = read.csv("October2018.csv", header=T)
+attach(October2018)
+consumptionmean[10]=mean(Consumption..Wh.)
+consumptionsd[10]=sd(Consumption..Wh.)
+#November Consumption
+Nov2018 = read.csv("Nov2018.csv", header=T)
+attach(Nov2018)
+consumptionmean[11]=mean(Consumption..Wh.)
+consumptionsd[11]=sd(Consumption..Wh.)
+#December Consumption
+December2018 = read.csv("December2018.csv", header=T)
+attach(December2018)
+consumptionmean[12]=mean(Consumption..Wh.)
+consumptionsd[12]=sd(Consumption..Wh.)
+
+set.seed(10) #Keep randomness in loops keep results outside constant for comparison purposes
+
+#Battery initialization and array setup
+batterysize = c(0,5000,10000,15000,20000,25000,30000,35000,40000,45000)
+armeantotenergyProd = 1:10 #Average total energy production for a house in Easton
+armeantotenergyCon = 1:10 #Average total energy consumption for a house in Easton
+armeantotdaysneedenergy = 1:10 #Days solar energy produced was not enough to cover all consumption
+armeantotneedenergy = 1:10 #Average amount of energy a house with solar would need to get from the grid over 1 year
+armeantexcesseng = 1:10 #Average amount of energy a house can sell back to the grid in a year
+armeantbatteryusage = 1:10 #Average total energy stored in the battery at any point in a year
+armpricewosolar = 1:10 #Average cost of energy without solar for a year
+armpricewsolar = 1:10 #Average cost of energy with solar for a year
+armenergysold = 1:10 #Average value of energy sold back to the grid over a year
+armmoneysaved = 1:10 #Average total money saved in a year with solar
+armtotalcost = 1:10 #Cost of a solar system including battery installation
+armtimetopay = 1:10 #Average number of years to pay back the cost of solar installation
+
+for(b in 1:13){ #Running each town simulation with 
+  
+  #Home Simulation
+  #Initialize City of Easton variables (Outer Loop)
+  monthdays = c(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+  totenergyProd = 0
+  totenergyCon = 0
+  totdaysneedenergy = 0
+  totneedenergy = 0
+  texcesseng = 0
+  tbatteryusage = 0 #How much total energy has the battery stored
+  tinstallcost = 0 #Installation cost
+  peakpower = batterysize[b] #Normal battery can hold 10Kwh of energy
+  ecount = 0
+  N = 5400 #Number of houses/structures capable of energy production in Easton
+  
+  for (i in 1:N){ #All Easton solar capable homes
+    pmodifyer = 0
+    randSamp = runif(1,0,1) #Generating the modifier for production and consumption
+    if (randSamp >= 0 && randSamp < 0.41){ #average 2.5 kwH system
+      pmodifyer = runif(1,.1,.51) #The portion of these house energy production to our choose house
+      installcost = 6625 * .70 #2.65 per watt times 2,500 watt system and a 30% tax credit
+      tinstallcost = tinstallcost + installcost
+    } #Modifier is based on midpoint of graph
+    else if (randSamp >= 0.41 && randSamp < 0.76){ #average 7.5 kwH system
+      pmodifyer = runif(1,.51,1.03)
+      installcost = 19500 * .70 #2.60 at this cost
+      tinstallcost = tinstallcost + installcost
+    } 
+    else if(randSamp >= 0.76 && randSamp < 0.87){ #average 12.5 kwH system
+      pmodifyer = runif(1,1.03,1.54)
+      installcost = 31250 * .70 #2.50 at this cost
+      tinstallcost = tinstallcost + installcost
+    }
+    else if (randSamp >= 0.87 && randSamp <= 1){ #average 17.5 kwH and greater system
+      pmodifyer = runif(1,1.54,3.09)
+      installcost = 41125 * .70 #2.35 at this cost
+      tinstallcost = tinstallcost + installcost
+    }
+    #Initialize inner variables
+    energyProd = 0
+    energyCon = 0
+    daysneedenergy = 0
+    needenergy = 0
+    battery = 0
+    bu = 0 #energy that has ever been in the battery
+    excesseng = 0
+    count = 0 #Days with energy going back to the gird
+    #Single Home Generation
+    #January
+    for(k in 1:12){
+      numdays = monthdays[k] #Recall the number of days in each month
+      for (j in 1:numdays){ 
+        #First generating production and consumption
+        dayprod = rnorm(1,productionmean[k],productionsd[k]) * pmodifyer
+        daycon = rnorm(1,consumptionmean[k],consumptionsd[k]) * pmodifyer
+        while (dayprod && daycon < 0) #Making sure values are non negative
+        {
+          dayprod = rnorm(1,productionmean[k],productionsd[k]) 
+          daycon = rnorm(1,consumptionmean[k],consumptionsd[k])
+        }
+        energyProd = energyProd + dayprod
+        energyCon = energyCon + daycon
+        #Taking into account the battery
+        dayeng = battery + dayprod #All energy available 
+        usage = dayeng - daycon #Enough energy for the day?
+        if(usage < 0){ #Not enough energy produced to cover the day
+          daysneedenergy = daysneedenergy +1
+          needenergy = needenergy + abs(usage)
+          battery = 0 
+        } else if (usage > 0 && usage < peakpower){ #Energy to spare
+          bu = bu + dayprod - daycon #Energy stored in the battery is this diff. in consumption and production
+          battery = usage
+        } else if (usage >= peakpower){ #Too much energy to store
+          peakbat = 0
+          if(dayprod-daycon >= peakpower){ #Making sure there is never more energy stored than the battery can produce
+            peakbat = peakpower #Can never hold more than peak power
+          } else{
+            peakbat = dayprod - daycon #Less than peak power when battery charge is large enough
+          }
+          bu = bu + peakbat
+          battery = peakpower
+          excesseng = excesseng + (usage-peakpower)
+          count = count +1
+        }
+      }
+    }
+    #Carrying the inner Variables to the total variables
+    totenergyProd = totenergyProd + energyProd
+    totenergyCon = totenergyCon + energyCon
+    totdaysneedenergy =totdaysneedenergy + daysneedenergy 
+    totneedenergy = totneedenergy + needenergy
+    texcesseng = texcesseng + excesseng
+    tbatteryusage = tbatteryusage + bu 
+    ecount = ecount + count
+  }
+  
+  #Calculating all the means in KwH
+  meantotenergyProd = (totenergyProd/N)/1000
+  armeantotenergyProd[b] = meantotenergyProd
+  meantotenergyCon = (totenergyCon/N)/1000
+  armeantotenergyCon[b] = meantotenergyCon
+  meantotdaysneedenergy = totdaysneedenergy/N 
+  armeantotdaysneedenergy[b] = meantotdaysneedenergy
+  meantotneedenergy = (totneedenergy/N)/1000
+  armeantotneedenergy[b] = meantotneedenergy
+  meantexcesseng = (texcesseng/N)/1000
+  armeantexcesseng[b] = meantexcesseng
+  meantbatteryusage = (tbatteryusage/N)/1000 
+  armeantbatteryusage[b] = meantbatteryusage
+  #Cost means
+  #$800 per KwH
+  batterycost = ((peakpower/1000)*800)*.70 #Cost of battery (The same for all houses in each inner loop) and is eligible for tax rebate
+  meantinstallcost = tinstallcost/N + batterycost 
+  
+  #Cost calculation 
+  mpricewosolar = 0.14 * meantotenergyCon #All energy consumed
+  armpricewosolar[b] = mpricewosolar
+  mpricewsolar = 0.14 * meantotneedenergy #Energy still needed with battery
+  armpricewsolar[b]  = mpricewsolar 
+  menergysold = (meantexcesseng/1000)*32.5 #SREC credits pay you on average $32.5 per MWh
+  armenergysold[b] = menergysold
+  mmoneysaved = mpricewosolar - mpricewsolar + menergysold #Money saved from using less energy and gained from net metering
+  armmoneysaved[b] = mmoneysaved
+  mtotalcost = meantinstallcost - mmoneysaved #Loss after 1 year
+  armtotalcost[b] = mtotalcost
+  mtimetopay = meantinstallcost/mmoneysaved #average time to make back cost of solar installation and battery
+  armtimetopay[b] = mtimetopay
+  
+}
+#Printing Values of arrays
+print(armeantotenergyProd)
+print(armeantotenergyCon)
+print(armeantotdaysneedenergy)
+print(armeantotneedenergy)
+print(armeantexcesseng)
+print(armeantbatteryusage)
+print(armpricewosolar)
+print(armpricewsolar)
+print(armenergysold)
+print(armmoneysaved)
+print(armtotalcost)
+print(armtimetopay)
+
+#Plotting important factors based in battery size
+plot(batterysize,armeantotdaysneedenergy,xlab = "Battery Size (kwh)", ylab = "Days Needing Energy From the Grid")
+title(main = "Days Grid Energy is Needed")
+plot(batterysize,armeantotneedenergy,xlab = "Battery Size (kwh)", ylab = "Average Yearly Energy From the Grid (kwh)")
+title(main = "Average Yearly Energy From the Grid")
+plot(batterysize,armeantexcesseng,xlab = "Battery Size (kwh)", ylab = "Average Yearly Energy Sold Back to the Grid (kwh)")
+title(main = "Average Yearly Energy Sold Back to the Grid")
+plot(batterysize,armeantbatteryusage,xlab = "Battery Size (kwh)", ylab = "Average Yearly Energy Stored in the Battery (kwh)")
+title(main = "Average Yearly Energy Stored in the Battery")
+plot(batterysize,armpricewsolar,xlab = "Battery Size (kwh)", ylab = "Average Yearly Energy Cost Per Household")
+title(main = "Average Yearly Energy Cost Per Household")
+plot(batterysize,armenergysold,xlab = "Battery Size (kwh)", ylab = "Average Yearly Profit for Selling Excess Energy")
+title(main="Average Yearly Profit for Selling Excess Energy")
+plot(batterysize,armmoneysaved,xlab = "Battery Size (kwh)", ylab = "Average Yearly Total Money Saved With Solar")
+title(main="Average Yearly Total Money Saved With Solar")
+plot(batterysize,armtotalcost,xlab = "Battery Size (kwh)", ylab = "Average Total Cost of Solar System")
+title(main="Average Total Cost of Solar System")
+plot(batterysize,armtimetopay,xlab = "Battery Size (kwh)", ylab = "Average Time to Pay of Solar System (Years)")
+title(main="Average Time to Pay of Solar System")
+
+#Printing important total values
+print(mean(armeantotenergyProd))
+print(mean(armeantotenergyCon))
+
+
+
+
